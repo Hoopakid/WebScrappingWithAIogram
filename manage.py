@@ -17,7 +17,16 @@ async def start_bot(message: Message):
     await message.answer(f"Hello {message.from_user.first_name}")
     await message.answer(f"Press /news to know about the latest information from the KUN UZ")
 
-send_information_for_three_hours()
+
+data = send_information_for_three_hours()
+
+
+@dp.message(lambda msg: msg.text == '/news')
+async def send_information(message: Message):
+    s = data["date"], data["year"], data["info1"], *data["info2"]
+    photo = FSInputFile('example-firefox.png', filename='screenshot')
+    await message.answer_photo(photo)
+    await message.answer(str(s).replace(',', '').replace('(', '').replace(')', '').replace("'", ''))
 
 
 async def main():
@@ -28,14 +37,3 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-
-#
-# data = get_information()
-#
-#
-# @dp.message(lambda msg: msg.text == '/news')
-# async def send_information(message: Message):
-#     s = data["date"], data["year"], data["info1"], *data["info2"]
-#     photo = FSInputFile('example-firefox.png', filename='screenshot')
-#     await message.answer_photo(photo)
-#     await message.answer(str(s).replace(',', '').replace('(', '').replace(')', '').replace("'", ''))
